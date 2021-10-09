@@ -21,8 +21,8 @@ offset-refresh=10
 [consumer.fastcampus]
 class-name="kafka"
 cluster="fastcampus"
-servers=[ "localhost:19092","localhost:29092","localhost:39092" ]
-group-denylist="^(console-consumer-|python-kafka-consumer-|quick-).*$"
+servers=["localhost:19092","localhost:29092","localhost:39092"]
+group-denylist=""
 group-allowlist=""
 
 [httpserver.listener]
