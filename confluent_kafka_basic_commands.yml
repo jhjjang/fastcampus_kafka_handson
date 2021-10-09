@@ -10,5 +10,5 @@
 # kafka 콘솔 컨슈머 실행
 ./kafka-console-consumer --bootstrap-server localhost:19092 --topic fastcampus --from-beginning
 
-# kafka 콘솔 컨슈머 프로듀서 실행
+# kafka 콘솔 프로듀서 실행
 ./kafka-console-producer --bootstrap-server localhost:19092 --topic fastcampus
