@@ -1,0 +1,15 @@
+version: '3'
+services:
+  apache-app:
+    image: centos:centos8
+    hostname: apache-app-server1
+    network_mode: host
+    command:
+      - bash
+      - -c
+      - >
+        yum -y install git vim;
+        yum -y install python2 python2-pip;
+        curl -s https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.15.1-linux-x86_64.tar.gz -o filebeat.tar.gz && tar xvfz filebeat.tar.gz -C /;
+        git clone https://github.com/kiritbasu/Fake-Apache-Log-Generator log_generator && cd log_generator && pip2 install -r requirements.txt;
+        python2 apache-fake-log-gen.py -n 0 -o LOG
