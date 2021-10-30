@@ -27,7 +27,7 @@ curl -v -XGET http://schemaregistry1:18081/schemas/ids/1
 curl -v -XGET http://schemaregistry1:18081/subjects/fast/versions/1
 
 # fast subject 내 최신버전으로 스키마 조회
-curl -v -XGET http://schemaregistry1:18081/subjects/Kafka-value/versions/latest
+curl -v -XGET http://schemaregistry1:18081/subjects/fast/versions/latest
 
 # 호환성 체크
 curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"int\"}"}' http://schemaregistry1:18081/compatibility/subjects/fast/versions/latest
