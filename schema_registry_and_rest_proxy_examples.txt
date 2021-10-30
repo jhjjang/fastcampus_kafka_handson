@@ -1,0 +1,52 @@
+##################################
+# 1. Schema Registry
+##################################
+
+# 스키마 생성
+curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"string\"}' http://schemaregistry1:18081/subjects/fast/versions
+curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"string\"}' http://schemaregistry1:18081/subjects/campus/versions
+
+# 등록한 subject 조회
+curl -v -XGET http://schemaregistry1:18081/subjects
+
+# 1. 설정한 호환성 타입 확인
+curl -v -XGET http://schemaregistry1:18081/config
+curl -v -XPUT --data '{"compatibility": "FULL"}' -H'Content-Type: application/vnd.schemaregistry.v1+json' http://schemaregistry1:18081/config
+curl -v -XGET http://schemaregistry1:18081/config
+
+curl -v -XPUT --data '{"compatibility": "BACKWARD"}' -H'Content-Type: application/vnd.schemaregistry.v1+json' http://schemaregistry1:18081/config
+curl -v -XGET http://schemaregistry1:18081/config
+
+# subject별 호환성 타입 설정
+curl -v -XPUT --data '{"compatibility": "NONE"}' -H'Content-Type: application/vnd.schemaregistry.v1+json' http://schemaregistry1:18081/config/fast
+
+# 스키마 아이디로 등록된 스키마 조회(전역)
+curl -v -XGET http://schemaregistry1:18081/schemas/ids/1
+
+# fast subject 내 버전으로 스키마 조회(지역)
+curl -v -XGET http://schemaregistry1:18081/subjects/fast/versions/1
+
+# fast subject 내 최신버전으로 스키마 조회
+curl -v -XGET http://schemaregistry1:8081/subjects/Kafka-value/versions/latest
+
+# 호환성 체크
+curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"int\"}"}' http://schemaregistry1:18081/compatibility/subjects/fast/versions/latest
+curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"int\"}"}' http://schemaregistry1:18081/compatibility/subjects/campus/versions/latest
+curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"string\"}"}' http://schemaregistry1:18081/compatibility/subjects/campus/versions/latest
+
+
+##################################
+# 2. REST Proxy
+##################################
+
+# Avro examples
+curl -v -XPOST -H'Content-Type: application/vnd.kafka.avro.v2+json' -H'Accept: application/vnd.kafka.v2+json' --data '{"value_schema": "{\"type\": \"record\", \"name\": \"account\", \"fields\": [{\"name\": \"balance\", \"type\": \"int\"}]}", "records": [{"value": {"balance": 10000}}]}' http://restproxy1:18082/topics/bank
+
+# Consumer 생성
+curl -v -XPOST -H'Content-Type: application/vnd.kafka.v2+json' --data '{"name": "my_consumer_instance", "format": "avro", "auto.offset.reset": "earliest"}' http://restproxy1:18082/consumers/my_consumer_group
+
+# Topic 구독
+curl -v -XPOST -H'Content-Type: application/vnd.kafka.v2+json' --data '{"topics":["bank"]}' http://restproxy1:18082/consumers/my_consumer_group/instances/my_consumer_instance/subscription
+
+# 메세지 처음부터 소비
+curl -v -XGET -H'Accept: application/vnd.kafka.avro.v2+json' http://restproxy1:18082/consumers/my_consumer_group/instances/my_consumer_instance/records
