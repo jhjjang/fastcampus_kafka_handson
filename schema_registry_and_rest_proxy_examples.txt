@@ -34,7 +34,8 @@ curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '
 curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"string\"}"}' http://schemaregistry1:18081/compatibility/subjects/campus/versions/latest
 curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"int\"}"}' http://schemaregistry1:18081/compatibility/subjects/campus/versions/latest
 
-
+curl -v -XDELETE http://schemaregistry1:18081/subjects/fast
+curl -v -XDELETE http://schemaregistry1:18081/subjects/campus
 
 ##################################
 # 2. REST Proxy
