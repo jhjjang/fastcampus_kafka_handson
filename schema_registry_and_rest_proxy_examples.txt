@@ -4,7 +4,7 @@
 
 # 스키마 생성
 curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"string\"}"}' http://schemaregistry1:18081/subjects/fast/versions
-curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"string\"}"}' http://schemaregistry1:18081/subjects/campus/versions
+curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"int\"}"}' http://schemaregistry1:18081/subjects/campus/versions
 
 # 등록한 subject 조회
 curl -v -XGET http://schemaregistry1:18081/subjects
@@ -27,12 +27,13 @@ curl -v -XGET http://schemaregistry1:18081/schemas/ids/1
 curl -v -XGET http://schemaregistry1:18081/subjects/fast/versions/1
 
 # fast subject 내 최신버전으로 스키마 조회
-curl -v -XGET http://schemaregistry1:8081/subjects/Kafka-value/versions/latest
+curl -v -XGET http://schemaregistry1:18081/subjects/Kafka-value/versions/latest
 
 # 호환성 체크
 curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"int\"}"}' http://schemaregistry1:18081/compatibility/subjects/fast/versions/latest
-curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"int\"}"}' http://schemaregistry1:18081/compatibility/subjects/campus/versions/latest
 curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"string\"}"}' http://schemaregistry1:18081/compatibility/subjects/campus/versions/latest
+curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"int\"}"}' http://schemaregistry1:18081/compatibility/subjects/campus/versions/latest
+
 
 
 ##################################
