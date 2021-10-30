@@ -3,8 +3,8 @@
 ##################################
 
 # 스키마 생성
-curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"string\"}' http://schemaregistry1:18081/subjects/fast/versions
-curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"string\"}' http://schemaregistry1:18081/subjects/campus/versions
+curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"string\"}"}' http://schemaregistry1:18081/subjects/fast/versions
+curl -v -XPOST -H'Content-Type: application/vnd.schemaregistry.v1+json' --data '{"schema": "{\"type\": \"string\"}"}' http://schemaregistry1:18081/subjects/campus/versions
 
 # 등록한 subject 조회
 curl -v -XGET http://schemaregistry1:18081/subjects
