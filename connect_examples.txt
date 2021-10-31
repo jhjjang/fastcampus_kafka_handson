@@ -74,7 +74,7 @@ curl -v -XGET -H'Accept: application/json' http://connect1:18083
 
 # connectors
 curl -v -XGET -H'Accept: application/json' http://connect1:18083/connectors
-curl -v -XGET -H'Accept: application/json' http://connect1:18083/connectors?expand=status
+curl -v -XGET -H'Accept: application/json' 'http://connect1:18083/connectors?expand=status'
 curl -v -XGET -H'Accept: application/json' http://connect1:18083/connectors/mysql-source-connector/config
 curl -v -XGET -H'Accept: application/json' http://connect1:18083/connectors/mysql-source-connector/status
 curl -v -XPUT -H'Accept: application/json' http://connect1:18083/connectors/mysql-source-connector/pause
