@@ -96,4 +96,4 @@ INSERT INTO kafka(name, phone_no) VALUES('Joe', '01073219284');
 SELECT * FROM kafka;
 
 UPDATE kafka SET phone_no='01077778888' where name='Sam';
-DELETE FROM kafka where name='Sam'; */
+*/
