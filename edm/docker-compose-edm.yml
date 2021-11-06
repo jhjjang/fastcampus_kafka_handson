@@ -1,0 +1,63 @@
+version: '3'
+services:
+  zookeeper-1:
+    hostname: zookeeper1
+    image: confluentinc/cp-zookeeper:6.2.0
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 12181
+      ZOOKEEPER_DATA_DIR: /zookeeper/data
+    ports:
+      - 12181:12181
+    volumes:
+      - ./zookeeper/data/1:/zookeeper/data
+
+  kafka-1:
+    hostname: kafka1
+    image: confluentinc/cp-kafka:6.2.0
+    depends_on:
+      - zookeeper-1
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:12181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:19092
+      KAFKA_LOG_DIRS: /kafka
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - 19092:19092
+    volumes:
+      - ./kafka/logs/1:/kafka
+
+  localstack-1:
+    hostname: localstack1
+    image: localstack/localstack:latest
+    environment:
+      AWS_DEFAULT_REGION: us-east-2
+      EDGE_PORT: 4566
+      SERVICES: dynamodb
+      DATA_DIR: /tmp/localstack/dynamodb/data
+    ports:
+      - 4566:4566
+    volumes:
+      - ./localstack:/tmp/localstack
+
+  mysql-1:
+    hostname: mysql1
+    image: mysql/mysql-server:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_USER: root
+      MYSQL_ROOT_HOST: "%%"
+      MYSQL_DATABASE: inventory
+      MYSQL_ROOT_PASSWORD: inventorypw
+    command: mysqld
+      --server-id=1234
+      --max-binlog-size=4096
+      --binlog-format=ROW
+      --log-bin=bin-log
+      --sync-binlog=1
+      --binlog-rows-query-log-events=ON
+    volumes:
+      - ./mysql:/var/lib/mysql

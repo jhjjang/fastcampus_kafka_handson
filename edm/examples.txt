@@ -1,0 +1,81 @@
+# mysql 설치
+brew install mysql
+
+# pip3 및 dependency 설치
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3 get-pip.py
+pip3 --version
+pip3 install -r requirements.txt
+
+# node js 설치 및 버전 확인
+brew install node
+npm --version
+node --version
+npm install mysql express
+
+
+
+# /etc/hosts에 kafka1 추가
+
+# 이벤트 채널 토픽 생성
+./create_topics.py
+
+# 인벤토리 테이블 생성
+CREATE TABLE inventory (
+    id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name char(30) NOT NULL,
+    price int(10) NOT NULL,
+    quantity int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE inventory_history (
+    id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    transaction_id char(36) NOT NULL,
+    inventory_id int(10) NOT NULL,
+    quantity int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+# 아이템 입력
+INSERT INTO inventory(name, price, quantity) VALUES('cloth', 50000, 100);
+INSERT INTO inventory(name, price, quantity) VALUES('cap', 30000, 100);
+INSERT INTO inventory(name, price, quantity) VALUES('sunglasses', 25000, 100);
+INSERT INTO inventory(name, price, quantity) VALUES('necklace', 150000, 100);
+INSERT INTO inventory(name, price, quantity) VALUES('earring', 15000, 100);
+
+
+# 주문 서비스 up
+./order_service.py 
+
+# 인벤토리 서비스 up
+node inventory_service.js
+
+# 인벤토리 서비스 컨슈머 up
+./inventory_consumer.py
+
+# 결제 서비스 컨슈머 up
+./payment_consumer.py
+
+# 주문 서비스 컨슈머 up
+./order_consumer.py
+
+
+# 주문 요청
+curl -v -XPOST http://localhost:8080/v1/order -H'Content-Type: application/json' \
+--data-binary @- << EOF
+{
+    "order": {
+        "user_id": "user",
+        "name": "Hong Gil Dong",
+        "addr": "29, Hansil-ro, Dalseo-gu, Daegu, Republic of Korea",
+        "tel": "01012341234",
+        "email": "hong@gil.com"
+    },
+    "inventory": {
+        "id": 2, 
+        "quantity": 5
+    }
+} 
+EOF
+
+# 주문현황 조회
+curl -v -XGET http://localhost:8080/v1/order?transaction_id=${TRANSACTION_ID}&user_id=user
